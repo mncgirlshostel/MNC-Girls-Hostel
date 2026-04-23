@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    // 1. Registrations
+    match /registrations/{registrationId} {
+      allow create: if isValidId(registrationId)
+        && isValidRegistration(incoming());
+      
+      // Only admins can read/manage registrations
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 2. Complaints
+    match /complaints/{complaintId} {
+      allow create: if isSignedIn()
+        && isValidId(complaintId)
+        && isValidComplaint(incoming());
+      
+      // Only admins can read/manage complaints
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Validation Helpers
+    function isValidRegistration(data) {
+      return data.keys().hasAll(['fullName', 'phone', 'email', 'roomType', 'createdAt'])
+        && data.keys().size() == 5
+        && data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 200
+        && data.phone is string && data.phone.size() >= 10 && data.phone.size() <= 20
+        && data.email is string && data.email.matches('^.+@.+\\..+$')
+        && data.roomType in ['AC Room - RS:- 20,000', 'Non-AC Room - RS:- 15,000']
+        && data.createdAt == request.time;
+    }
+
+    function isValidComplaint(data) {
+      return data.keys().hasAll(['roomNumber', 'category', 'details', 'status', 'createdAt'])
+        && data.keys().size() == 5
+        && data.roomNumber is string && data.roomNumber.size() > 0 && data.roomNumber.size() <= 20
+        && data.category is string && data.category.size() > 0
+        && data.details is string && data.details.size() > 0 && data.details.size() <= 2000
+        && data.status == 'pending'
+        && data.createdAt == request.time;
+    }
+
+    // Admin logic (mocked or email-based)
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'khan7717171@gmail.com' && request.auth.token.email_verified == true
+      );
+    }
+  }
+}

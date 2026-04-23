@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "Registration": {
+      "title": "Registration",
+      "description": "A hostel admission registration",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "roomType": { "type": "string", "enum": ["AC Room - RS:- 20,000", "Non-AC Room - RS:- 15,000"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["fullName", "phone", "email", "roomType", "createdAt"]
+    },
+    "Complaint": {
+      "title": "Complaint",
+      "description": "A resident complaint",
+      "type": "object",
+      "properties": {
+        "roomNumber": { "type": "string" },
+        "category": { "type": "string" },
+        "details": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "resolved"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["roomNumber", "category", "details", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "registrations/{registrationId}": {
+      "schema": "Registration",
+      "description": "Collection of admission registrations"
+    },
+    "complaints/{complaintId}": {
+      "schema": "Complaint",
+      "description": "Collection of user complaints"
+    }
+  }
+}
