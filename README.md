@@ -1,20 +1,28 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# MNC Girls Hostel Website
 
-# Run and deploy your AI Studio app
+This website is built with React, Vite, and Tailwind CSS.
 
-This contains everything you need to run your app locally.
+## 🚀 How to make it live on GitHub Pages
 
-View your app in AI Studio: https://ai.studio/apps/9377cd1c-2fb0-4c10-8b29-6aa852e75d8c
+If your website at `mncgirlshostel.github.io` is not showing live, please follow these 3 simple steps:
 
-## Run Locally
+### 1. Enable GitHub Actions Deployment
+1. Go to your repository on GitHub.
+2. Click on **Settings** (top menu).
+3. Click on **Pages** (left sidebar).
+4. Under **Build and deployment** > **Source**, change the dropdown from "Deploy from a branch" to **GitHub Actions**.
 
-**Prerequisites:**  Node.js
+### 2. Verify Actions Permissions
+1. In **Settings**, go to **Actions** > **General**.
+2. Scroll to **Workflow permissions**.
+3. Select **Read and write permissions**.
+4. Click **Save**.
 
+### 3. Check the Build Progress
+1. Click the **Actions** tab at the top of your GitHub repository.
+2. You will see a workflow named **"Deploy static content to Pages"**.
+3. If it failed (Red X), click on it to see the error. If it succeeded (Green check), your site is live!
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+
+**Note:** The `.github/workflows/deploy.yml` file I created handles the entire build process (compiling React to HTML/CSS). You don't need to manually upload the `dist` folder.
